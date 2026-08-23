@@ -117,6 +117,26 @@ char ouputextradatafilename [] = "/data/extradata";
 
 #ifdef USE_ION
     #define MEM_DEVICE "/dev/ion"
+    /* Compatibility shims: this HAL was written against an older/vendor
+     * ION API. These identifiers don't exist in this kernel's ion.h,
+     * and HTC Leo (QSD8250) has no secure-content-protection heap, so
+     * these paths are dead at runtime (secure_mode is always false) but
+     * must still compile. */
+    #ifndef ION_CAMERA_HEAP_ID
+    #define ION_CAMERA_HEAP_ID ION_HEAP_TYPE_SYSTEM
+    #endif
+    #ifndef ION_CP_MM_HEAP_ID
+    #define ION_CP_MM_HEAP_ID ION_HEAP_TYPE_SYSTEM
+    #endif
+    #ifndef ION_HEAP
+    #define ION_HEAP(bit) (1 << (bit))
+    #endif
+    #ifndef ION_SECURE
+    #define ION_SECURE (1 << 31)
+    #endif
+    #ifndef CACHED
+    #define CACHED 1
+    #endif
     #ifdef MAX_RES_720P
     #define MEM_HEAP_ID ION_CAMERA_HEAP_ID
     #else
@@ -6847,7 +6867,7 @@ int omx_vdec::async_message_process (void *context, void* message)
 
         if (omx->output_use_buffer)
           memcpy ( omxhdr->pBuffer,
-                   (vdec_msg->msgdata.output_frame.bufferaddr +
+                   ((char*)vdec_msg->msgdata.output_frame.bufferaddr +
                     vdec_msg->msgdata.output_frame.offset),
                     vdec_msg->msgdata.output_frame.len );
       }
