@@ -45,7 +45,9 @@ endif
 ifeq ($(TARGET_BOARD_PLATFORM),msm7x30)
 libOmxVdec-def += -DMAX_RES_720P
 endif
-
+ifeq ($(TARGET_BOARD_PLATFORM),qsd8k)
+libOmxVdec-def += -DMAX_RES_720P
+endif
 libOmxVdec-def += -D_ANDROID_ICS_
 
 ifeq ($(TARGET_USES_ION),true)
@@ -59,19 +61,21 @@ endif
 include $(CLEAR_VARS)
 LOCAL_PATH:= $(ROOT_DIR)
 
-libmm-vdec-inc          := bionic/libc/include
+libmm-vdec-inc          := external/libcxx/include
+libmm-vdec-inc          += bionic/libc/include
 libmm-vdec-inc          += bionic/libstdc++/include
 libmm-vdec-inc          += $(LOCAL_PATH)/inc 
 libmm-vdec-inc          += $(OMX_VIDEO_PATH)/vidc/common/inc
-libmm-vdec-inc          += hardware/qcom/media-legacy/mm-core/inc
+libmm-vdec-inc          += hardware/qcom/media/qsd8k/mm-core/inc
 libmm-vdec-inc          += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 #libmm-vdec-inc          += bionic/libc/kernel/common/linux
 #DRM include - Interface which loads the DRM library
 libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
-libmm-vdec-inc          += hardware/qcom/display-legacy/libgralloc
-libmm-vdec-inc          += hardware/qcom/display-legacy/libgenlock
+libmm-vdec-inc          += hardware/qcom/display/qsd8k/libgralloc
+libmm-vdec-inc          += hardware/qcom/display/qsd8k/libgenlock
 libmm-vdec-inc          += frameworks/native/include/media/openmax
 libmm-vdec-inc          += frameworks/native/include/media/hardware
+libmm-vdec-inc          += frameworks/native/libs/nativebase/include
 
 LOCAL_MODULE                    := libOmxVdec
 LOCAL_MODULE_TAGS               := optional
@@ -104,7 +108,7 @@ include $(BUILD_SHARED_LIBRARY)
 # ---------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 
-mm-vdec-test-inc    := hardware/qcom/media-legacy/mm-core/inc
+mm-vdec-test-inc    := hardware/qcom/media/qsd8k/mm-core/inc
 mm-vdec-test-inc    += $(LOCAL_PATH)/inc
 mm-vdec-test-inc    += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 #mm-vdec-test-inc    += bionic/libc/kernel/common/linux
@@ -129,7 +133,7 @@ include $(BUILD_EXECUTABLE)
 # ---------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 
-mm-vdec-drv-test-inc    := hardware/qcom/media-legacy/mm-core/inc
+mm-vdec-drv-test-inc    := hardware/qcom/media/qsd8k/mm-core/inc
 mm-vdec-drv-test-inc    += $(LOCAL_PATH)/inc
 mm-vdec-drv-test-inc    += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 #mm-vdec-drv-test-inc    += bionic/libc/kernel/common/linux
